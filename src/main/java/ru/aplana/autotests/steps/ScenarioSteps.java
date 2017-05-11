@@ -1,6 +1,7 @@
 package ru.aplana.autotests.steps;
 
 import net.thucydides.core.annotations.Steps;
+import org.jbehave.core.annotations.Named;
 import org.jbehave.core.annotations.Then;
 import org.jbehave.core.annotations.When;
 import org.jbehave.core.model.ExamplesTable;
@@ -16,66 +17,43 @@ public class ScenarioSteps {
     MainPageSteps mainPageSteps;
 
     @Steps
-    ProductPageSteps productPageSteps;
+    DMSSteps dmsSteps;
 
     @Steps
-    BasketPageSteps basketPageSteps;
-
-    @Steps
-    CheckOutPageSteps checkOutPageSteps;
+    SendAppSteps sendAppSteps;
 
     @When("выбран пункт меню \"$menuName\"")
-    public void selectMenuItem(String menuName){
+    public void selectMenuItem(@Named("menuName") String menuName){
         mainPageSteps.selectMenuItem(menuName);
     }
 
-    @When("выбран продукт с наименованием \"$productName\"")
-    public void selectProduct(String productName){
-        mainPageSteps.selectProductItem(productName);
+    @When("выбран вид страхования \"$insuranceName\"")
+    public void selectMenuInsurance(String insuranceName){
+        mainPageSteps.selectMenuInsurance(insuranceName);
     }
 
-    @When("выполнен переход к старнице - корзина")
-    public void goToBasketPage(){
-        productPageSteps.goToBasketPage();
+    @Then("заголовок страницы - ДМС равен \"$title\"")
+    public void checkTitleDMSPage(String title){
+        dmsSteps.checkPageTitle(title);
     }
 
-    @Then("заголвок страницы - продукт равен \"$productName\"")
-    public void checkTitleProductPage(String productName){
-        productPageSteps.checkPageTitle(productName);
+    @When("выполнено нажати на кнопку Отправить заявку")
+    public void clickBtnSendApp(){
+        dmsSteps.goToSendAppPage();
     }
 
-    @When("сохранено значение итоговой суммы в переменную \"$variable\"")
-    public void saveTotalAmount(String variable){
-        productPageSteps.getAmount(variable);
+    @Then("заголовок страницы - Заявка на ДМС равен \"$title\"")
+    public void checkTitleSendAppPage(String title){
+        sendAppSteps.checkPageTitle(title);
     }
 
-    @When("выполнено нажатие на кнопку - Добавить в корзину")
-    public void addToBasket(){
-        productPageSteps.addToBasket();
-    }
-
-    @Then("заголвок страницы - корзина равен \"$title\"")
-    public void checkTitleBasketPage(String title){
-        basketPageSteps.checkPageTitle(title);
-    }
-
-    @Then("итоговая сумма равна \"$variable\"")
-    public void checkTotalAmount(String variable){
-        variable = System.getProperty(variable);
-        basketPageSteps.checkAmount(variable);
-    }
-
-    @When("выполнен переход к старнице - оформление заказа")
-    public void goToCheckOutPage(){
-        basketPageSteps.goToCheckOutPage();
-    }
 
     @When("заполняются поля: $fields")
     public void fillForm(ExamplesTable fields){
         for (Map<String, String> row : fields.getRows()) {
             String field = row.get("field");
             String value = row.get("value");
-            checkOutPageSteps.fillField(field, value);
+            sendAppSteps.fillField(field, value);
         }
     }
 
@@ -85,8 +63,14 @@ public class ScenarioSteps {
         for (Map<String, String> row : fields.getRows()) {
             String field = row.get("field");
             String value = row.get("value");
-            checkOutPageSteps.checkFillField(field, value);
+            sendAppSteps.checkFillField(field, value);
         }
+    }
+
+    @Then("в поле $field присутствует сообщение об ошибке $errorMessage")
+    public void checkErrorMessage(String field, String errorMessage){
+        sendAppSteps.checkErrorMessageField(field, errorMessage);
+
     }
 
 

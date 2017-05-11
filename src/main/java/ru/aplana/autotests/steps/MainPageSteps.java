@@ -16,8 +16,9 @@ public class MainPageSteps extends ScenarioSteps {
         mainPage.selectMenuItem(menuItem);
     }
 
-    @Step("выбран продукт с наименованием {0}")
-    public void selectProductItem(String productName){
-        mainPage.selectProduct(productName);
+    @Step("выбран вид страхования {0}")
+    public void selectMenuInsurance(String menuItem){
+        mainPage.selectInsuranceItem(menuItem);
     }
+
 }
